@@ -27,11 +27,20 @@ app.use(cors({
 io.on("connection", (socket) => {
     console.log("A new user had connected", socket.id)
 
-    socket.on("message", ({room, message}) => {
+    socket.on("message", ({ room, message }) => {
         // socket.broadcast.emit(message) // sends all users except the sender
         // io.emit(message) // io means all connected users (entire circuit)
-        console.log("A new message was sent", message, room)
-        io.to(room).emit(message)
+        io.to(room).emit("message", message) // room or an array of rooms
+    })
+
+    socket.on("join-room", (room) => {
+        socket.join(room)
+        io.to(room).emit("joined-room", room)
+    })
+
+    socket.on("leave-room", (room) => {
+        socket.leave(room)
+        io.to(room).emit("left-room", room)
     })
 
     socket.on("disconnect", () => {
