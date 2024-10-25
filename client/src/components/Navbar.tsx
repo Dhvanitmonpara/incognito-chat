@@ -2,15 +2,18 @@ import useChatStore from "../store/chatStore";
 import { IoArrowBack } from "react-icons/io5";
 import { MdDownload } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import useSocket from "../socket/useSocket";
 
 function Navbar() {
+  const socket = useSocket()
   const { room } = useChatStore();
   const navigate = useNavigate()
   const handleBackToHome = () => {
+    socket.emit('leave-room', room)
     navigate("/");
   };
   return (
-    <div className="h-20 w-full px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center bg-zinc-800">
+    <div className="sticky top-0 left-0 h-20 w-full px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
       {/* <h1 className="text-3xl">
         {socketId ? `Connected with id ${socketId}` : "Not Connected"}
       </h1> */}

@@ -1,29 +1,25 @@
-import { io } from "socket.io-client";
 import "./App.css";
 import { useEffect } from "react";
-import { useMemo } from "react";
+import useSocket from "./socket/useSocket";
 import useChatStore from "./store/chatStore";
-import Chats from "./components/Chats";
-import Navbar from "./components/Navbar";
-import RoomForm from "./components/RoomForm";
 import useSocketStore from "./store/socketStore";
-import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { Outlet } from "react-router-dom";
+import { MessageType } from "./types/chatTypes";
 
 function App() {
-  const socket = useMemo(() => io("http://localhost:8001"), []);
+  const socket = useSocket();
   const { setChats, setRoom } = useChatStore();
-  const { setSocketId, socketId, setSocket } = useSocketStore();
+  const { setSocketId } = useSocketStore();
 
   useEffect(() => {
-    setSocketId("");
-
     socket.on("connect", () => {
       setSocketId(socket.id || "");
-      setSocket(socket);
     });
 
-    socket.on("message", (message) => {
-      setChats(message);
+    socket.on("receive-message", (data: MessageType[]) => {
+      console.log(data)
+      setChats(data);
     });
 
     socket.on("joined-room", (room) => {
@@ -31,12 +27,22 @@ function App() {
     });
 
     socket.on("left-room", (room) => {
-      setRoom(room);
+      setRoom("");
+      setChats([]);
+      toast(`You have left the room ${room}`)
     });
 
     socket.on("disconnect", () => {
       setSocketId("");
-      setSocket(undefined);
+      toast("You have been disconnected")
+    });
+    
+    socket.on("disconnect", () => {
+      setSocketId("");
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection Error:", error);
     });
 
     return () => {
@@ -45,25 +51,8 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {socketId ? (
-        <div>
-          <Navbar />
-          <Chats />
-        </div>
-      ) : (
-        <RoomForm />
-      )}
-      <Chats />
-      <Toaster
-        position={window.innerWidth >= 1024 ? "bottom-right" : "top-center"}
-        toastOptions={{
-          style: {
-            background: "#333",
-            color: "#fff",
-          },
-        }}
-      />
+    <div className="bg-zinc-800 h-screen overflow-hidden">
+      <Outlet />
     </div>
   );
 }

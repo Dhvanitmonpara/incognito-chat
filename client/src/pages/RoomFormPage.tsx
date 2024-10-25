@@ -1,33 +1,30 @@
 import { FormEvent } from "react";
 import { useState } from "react";
-import useChatStore from "../store/chatStore";
+import useChatStore from "./../store/chatStore";
 import { useNavigate } from "react-router-dom";
-import useSocketStore from "../store/socketStore";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
+import useSocket from "./../socket/useSocket";
 
-function RoomForm() {
+function RoomFormPage() {
   const { setRoom, room } = useChatStore();
   const [roomName, setRoomName] = useState("");
   const navigate = useNavigate();
-
-  const { socket } = useSocketStore();
+  const socket = useSocket();
 
   const handleJoinRoom = (e: FormEvent) => {
     e.preventDefault();
-    if (socket === undefined) {
-      toast.error("Socket is not connected")
+    if (socket === null) {
+      toast.error("Socket is not connected");
     } else {
       if (room) {
-        socket.emit("join-room", roomName);
-      } else if (roomName) {
         socket.emit("leave-room", room);
         socket.emit("join-room", roomName);
       } else {
-        socket.emit("leave-room", room);
+        socket.emit("join-room", roomName);
       }
+      setRoom(roomName);
+      navigate(`/chat/${roomName}`);
       setRoomName("");
-      setRoom("");
-      navigate(`/chat/${room}`);
     }
   };
   return (
@@ -45,6 +42,7 @@ function RoomForm() {
           className="py-3 px-6 bg-zinc-700 w-full border-2 rounded-full border-zinc-600 focus:border-zinc-500 text-zinc-100 outline-none"
         />
         <button
+          disabled={roomName.length === 0}
           type="submit"
           className={`py-3 px-6 w-full font-semibold rounded-full bg-zinc-100 hover:bg-zinc-300 text-zinc-900 transition-all disabled:bg-zinc-400`}
         >
@@ -55,4 +53,4 @@ function RoomForm() {
   );
 }
 
-export default RoomForm;
+export default RoomFormPage;

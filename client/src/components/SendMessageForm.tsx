@@ -1,35 +1,31 @@
 import { FormEvent } from "react";
 import { useState } from "react";
-import { Socket } from "socket.io-client";
 import useChatStore from "../store/chatStore";
 import { IoSendSharp } from "react-icons/io5";
+import useSocket from "../socket/useSocket";
 
-interface SendMessageFormProps {
-    socket: Socket;
-}
-
-function SendMessageForm({socket}: SendMessageFormProps) {
+function SendMessageForm() {
   const [message, setMessage] = useState("");
+  const socket = useSocket();
+  const { room } = useChatStore();
 
-  const {room} = useChatStore()
-
-    const handleSendMessage = (e: FormEvent) => {
-        e.preventDefault();
-        socket.emit("message", { room, message });
-        setMessage("");
-      };
+  const handleSendMessage = (e: FormEvent) => {
+    e.preventDefault();
+    socket.emit("message", { room, message, sender: socket.id });
+    setMessage("");
+  };
   return (
-    <form
-      className="w-full flex flex-col space-y-5 justify-center items-center"
-      onSubmit={handleSendMessage}
-    >
-      <div className="h-12 w-full max-w-xl flex justify-center rounded-full overflow-hidden px-1 items-center bg-zinc-800">
+    <div className="fixed bottom-4 left-0 px-8 py-4 w-full flex flex-col space-y-5 justify-center items-center">
+      <form
+        onSubmit={handleSendMessage}
+        className="h-12 w-full max-w-xl bg-zinc-700 flex justify-center rounded-full overflow-hidden px-1 items-center"
+      >
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Send something"
-          className="p-2 pl-6 bg-zinc-800 w-full text-zinc-100 outline-none"
+          className="p-2 pl-6 bg-zinc-700 w-full text-zinc-100 outline-none"
         />
         <button
           type="submit"
@@ -39,8 +35,8 @@ function SendMessageForm({socket}: SendMessageFormProps) {
         >
           <IoSendSharp />
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
 
