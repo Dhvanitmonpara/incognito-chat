@@ -26,9 +26,20 @@ app.use(cors({
 
 io.on("connection", (socket) => {
     console.log("A new user had connected", socket.id)
+
+    socket.on("message", ({room, message}) => {
+        // socket.broadcast.emit(message) // sends all users except the sender
+        // io.emit(message) // io means all connected users (entire circuit)
+        console.log("A new message was sent", message, room)
+        io.to(room).emit(message)
+    })
+
+    socket.on("disconnect", () => {
+        console.log("A user had disconnected")
+    })
 })
 
-const port = process.env.PORT
+const port = process.env.PORT || 8000
 server.listen(port, () => {
     console.log(`Server is listening to port ${port}`)
 })
