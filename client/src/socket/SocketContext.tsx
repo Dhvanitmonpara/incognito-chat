@@ -10,7 +10,10 @@ interface SocketProviderProps {
 }
 
 const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
-  const socket = useMemo(() => io(import.meta.env.VITE_SERVER_URI), []);
+  // const socket = useMemo(() => io(import.meta.env.VITE_SERVER_URI), []);
+  const socket = useMemo(() => io(import.meta.env.VITE_SERVER_URI, {
+    transports: ['websocket']
+  }), []);
 
   return (
     <SocketContext.Provider value={socket}>
