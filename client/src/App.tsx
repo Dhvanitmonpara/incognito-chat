@@ -18,11 +18,12 @@ function App() {
     };
 
     const handleReceiveMessage = (data: MessageType) => {
-      addChat(data); // Directly add new message without checking length
+      addChat(data);
     };
 
     const handleJoinedRoom = (room: string) => {
       setRoom(room);
+      setChats([]);
     };
 
     const handleLeftRoom = ({

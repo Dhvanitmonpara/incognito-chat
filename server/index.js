@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: process.env.DOMAIN,
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -20,21 +20,19 @@ const io = new Server(server, {
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.DOMAIN,
         methods: ["GET", "POST"],
         credentials: true,
     })
 );
 
 io.on("connection", (socket) => {
-    console.log("A new user has connected:", socket.id);
 
     socket.on("message", ({ room, message, sender }) => {
         const messageData = {
             _id: Date.now().toString(),
             message,
-            sender,
-            timestamp: new Date().toISOString(),
+            sender
         };
 
         if (room) {

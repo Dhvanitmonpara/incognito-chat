@@ -7,7 +7,7 @@ function ChatPage() {
     <div className="w-screen h-screen flex flex-col">
       <Navbar />
       {/* Adjust container to allow Chats to scroll */}
-      <div className="flex-1 pb-28 overflow-y-auto">
+      <div className="flex-1 pb-24 overflow-y-auto">
         <Chats />
       </div>
       {/* Position SendMessageForm at the bottom */}
