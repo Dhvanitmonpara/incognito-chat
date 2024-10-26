@@ -9,46 +9,68 @@ import { MessageType } from "./types/chatTypes";
 
 function App() {
   const socket = useSocket();
-  const { setChats, setRoom } = useChatStore();
+  const { setChats, addChat, setRoom, chats } = useChatStore();
   const { setSocketId } = useSocketStore();
 
   useEffect(() => {
-    socket.on("connect", () => {
+    const handleConnect = () => {
       setSocketId(socket.id || "");
-    });
+    };
 
-    socket.on("receive-message", (data: MessageType[]) => {
-      console.log(data)
-      setChats(data);
-    });
+    const handleReceiveMessage = (data: MessageType) => {
+      addChat(data); // Directly add new message without checking length
+    };
 
-    socket.on("joined-room", (room) => {
+    const handleJoinedRoom = (room: string) => {
       setRoom(room);
-    });
+    };
 
-    socket.on("left-room", (room) => {
+    const handleLeftRoom = ({
+      room,
+      sender,
+    }: {
+      room: string;
+      sender: string;
+    }) => {
+      if (sender === socket.id) {
+        setChats([]);
+        setRoom("");
+      } else {
+        toast(`${sender} has left the room ${room}`);
+      }
+    };
+
+    const handleDisconnect = () => {
+      setSocketId("");
       setRoom("");
       setChats([]);
-      toast(`You have left the room ${room}`)
-    });
+      toast("You have been disconnected");
+    };
 
-    socket.on("disconnect", () => {
-      setSocketId("");
-      toast("You have been disconnected")
-    });
-    
-    socket.on("disconnect", () => {
-      setSocketId("");
-    });
+    const handleConnectError = (error: unknown) => {
+      if (error instanceof Error) {
+        console.error("Connection Error:", error.message);
+      } else {
+        console.error("Connection Error:", error);
+      }
+    };
 
-    socket.on("connect_error", (error) => {
-      console.error("Connection Error:", error);
-    });
+    socket.on("connect", handleConnect);
+    socket.on("receive-message", handleReceiveMessage);
+    socket.on("joined-room", handleJoinedRoom);
+    socket.on("left-room", handleLeftRoom);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleConnectError);
 
     return () => {
-      socket.disconnect();
+      socket.off("connect", handleConnect);
+      socket.off("receive-message", handleReceiveMessage);
+      socket.off("joined-room", handleJoinedRoom);
+      socket.off("left-room", handleLeftRoom);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleConnectError);
     };
-  }, []);
+  }, [socket, setChats, addChat, chats, setRoom, setSocketId]);
 
   return (
     <div className="bg-zinc-800 h-screen overflow-hidden">

@@ -9,21 +9,27 @@ import {
 } from "react-router-dom";
 
 // pages
-import Layout from "./Layout.js";
-import ChatPage from "./pages/ChatPage.js";
-import RoomFormPage from "./pages/RoomFormPage.js";
+import Layout from "./Layout";
+import ChatPage from "./pages/ChatPage";
+import RoomFormPage from "./pages/RoomFormPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route path="" element={<RoomFormPage />} />
+      <Route path="/" element={<RoomFormPage />} />
       <Route path="/chat/:room" element={<ChatPage />} />
     </Route>
   )
 );
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  );
+} else {
+  console.error("Root element not found");
+}

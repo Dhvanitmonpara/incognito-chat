@@ -18,7 +18,7 @@ const useChatStore = create<ChatState>()(
         chats: [],
         room: "",
         setChats: (chats: MessageType[]) => set({ chats }),
-        addChat(chat) {
+        addChat(chat: MessageType) {
           set((state) => ({
             chats: [...state.chats, chat],
           }));
