@@ -1,1 +1,3 @@
 # incognito-chat
+
+Stay anonymous
