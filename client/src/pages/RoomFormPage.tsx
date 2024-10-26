@@ -42,7 +42,7 @@ function RoomFormPage() {
           className="py-3 px-6 bg-zinc-700 w-full border-2 rounded-full border-zinc-600 focus:border-zinc-500 text-zinc-100 outline-none"
         />
         <button
-          disabled={roomName.length === 0}
+          disabled={!roomName.trim()}
           type="submit"
           className={`py-3 px-6 w-full font-semibold rounded-full bg-zinc-100 hover:bg-zinc-300 text-zinc-900 transition-all disabled:bg-zinc-400`}
         >
