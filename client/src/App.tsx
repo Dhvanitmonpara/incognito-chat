@@ -10,7 +10,7 @@ import { MessageType } from "./types/chatTypes";
 function App() {
   const socket = useSocket();
   const { setChats, addChat, setRoom, chats } = useChatStore();
-  const { setSocketId } = useSocketStore();
+  const { setSocketId, setUser } = useSocketStore();
 
   useEffect(() => {
     const handleConnect = () => {
@@ -18,26 +18,32 @@ function App() {
     };
 
     const handleReceiveMessage = (data: MessageType) => {
+      console.log(data)
       addChat(data);
     };
 
-    const handleJoinedRoom = (room: string) => {
+    const handleJoinedRoom = ({room, username}: {room: string; username: string}) => {
       setRoom(room);
       setChats([]);
+      setUser(username)
+      toast(`${username} has joined the room ${room}`);
     };
 
     const handleLeftRoom = ({
       room,
       sender,
+      username
     }: {
       room: string;
       sender: string;
+      username: string
     }) => {
       if (sender === socket.id) {
         setChats([]);
         setRoom("");
+        setUser("")
       } else {
-        toast(`${sender} has left the room ${room}`);
+        toast(`${username} has left the room ${room}`);
       }
     };
 

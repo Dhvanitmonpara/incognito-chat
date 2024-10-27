@@ -4,8 +4,9 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import cors from "cors";
 
-if (!dotenv.config({ path: "./.env" })) {
-    console.error("⚠️  Error loading .env file");
+const result = dotenv.config({ path: "./.env" });
+if (result.error) {
+    console.error("⚠️  Error loading .env file:", result.error);
 }
 
 const app = express();
@@ -28,11 +29,12 @@ app.use(
 
 io.on("connection", (socket) => {
 
-    socket.on("message", ({ room, message, sender }) => {
+    socket.on("message", ({ room, message, sender, username }) => {
         const messageData = {
             _id: Date.now().toString(),
             message,
-            sender
+            sender,
+            username
         };
 
         if (room) {
@@ -42,15 +44,15 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("join-room", (room) => {
+    socket.on("join-room", ({room, username}) => {
         socket.join(room);
-        io.to(room).emit("joined-room", room);
+        io.to(room).emit("joined-room", {room, username});
     });
 
-    socket.on("leave-room", ({ room, sender }) => {
+    socket.on("leave-room", ({ room, sender, username }) => {
         socket.leave(room);
-        io.to(room).emit("left-room", {room, sender} );
-        io.to(sender).emit("left-room", {room, sender});
+        io.to(room).emit("left-room", {room, sender, username} );
+        io.to(sender).emit("left-room", {room, sender, username});
     });
 
     socket.on("disconnect", () => {

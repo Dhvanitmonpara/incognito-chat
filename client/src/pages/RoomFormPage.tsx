@@ -8,6 +8,7 @@ import useSocket from "./../socket/useSocket";
 function RoomFormPage() {
   const { setRoom, room } = useChatStore();
   const [roomName, setRoomName] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const socket = useSocket();
 
@@ -17,10 +18,10 @@ function RoomFormPage() {
       toast.error("Socket is not connected");
     } else {
       if (room) {
-        socket.emit("leave-room", room);
-        socket.emit("join-room", roomName);
+        socket.emit("leave-room", { room, sender: socket.id, username });
+        socket.emit("join-room", { room:roomName, username });
       } else {
-        socket.emit("join-room", roomName);
+        socket.emit("join-room", { room:roomName, username });
       }
       setRoom(roomName);
       navigate(`/chat/${roomName}`);
@@ -28,12 +29,19 @@ function RoomFormPage() {
     }
   };
   return (
-    <div className="w-full h-screen bg-zinc-800 flex flex-col space-y-5 justify-center items-center">
+    <div className="w-full h-screen bg-zinc-800 flex flex-col space-y-5 justify-end sm:justify-center items-center">
       <form
         onSubmit={handleJoinRoom}
-        className="md:w-full space-y-4 w-96 md:max-w-xl flex flex-col rounded-md justify-center overflow-hidden p-4 items-center"
+        className="space-y-4 w-full py-16 px-8 sm:p-4 max-w-96 sm:max-w-lg md:max-w-xl flex flex-col rounded-md justify-center overflow-hidden items-center"
       >
         <h1 className="text-zinc-100 pb-4 text-2xl">Create or Join Room</h1>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter username"
+          className="py-3 px-6 bg-zinc-700 w-full border-2 rounded-full border-zinc-600 focus:border-zinc-500 text-zinc-100 outline-none"
+        />
         <input
           type="text"
           value={roomName}

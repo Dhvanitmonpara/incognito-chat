@@ -2,24 +2,32 @@ import { FormEvent, useState } from "react";
 import useChatStore from "../store/chatStore";
 import { IoSendSharp } from "react-icons/io5";
 import useSocket from "../socket/useSocket";
+import useSocketStore from "../store/socketStore";
 
 // Type for the message payload
 interface MessageData {
   room: string;
   message: string;
   sender: string | undefined;
+  username: string;
 }
 
 function SendMessageForm() {
   const [message, setMessage] = useState("");
   const socket = useSocket();
   const { room } = useChatStore();
+  const { user } = useSocketStore();
 
   const handleSendMessage = (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (socket && room && message.trim()) {
-      const messageData: MessageData = { room, message, sender: socket.id };
+      const messageData: MessageData = {
+        room,
+        message,
+        sender: socket.id,
+        username: user,
+      };
       socket.emit("message", messageData);
       setMessage("");
     }

@@ -8,10 +8,10 @@ import useSocketStore from "../store/socketStore";
 function Navbar() {
   const socket = useSocket()
   const { room } = useChatStore();
-  const { socketId } = useSocketStore();
+  const { socketId, user } = useSocketStore();
   const navigate = useNavigate()
   const handleBackToHome = () => {
-    socket.emit('leave-room', {room, socketId})
+    socket.emit('leave-room', {room, sender: socketId, username: user})
     navigate("/");
   };
   return (
