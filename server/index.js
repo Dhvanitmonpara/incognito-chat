@@ -69,6 +69,7 @@ io.on("connection", (socket) => {
 
             // Emit the updated room data to clients
             io.to(room).emit("left-room", { room: rooms[room], username });
+            io.to(socketId).emit("left-room", { room: null });
 
             // Remove room if empty
             if (rooms[room].activeUsers.length === 0) {

@@ -14,8 +14,8 @@ function Chats() {
   }, [chat]);
 
   return (
-    <div className="flex flex-col px-4 py-4 h-full overflow-y-auto">
-      {chat.length > 0 && (
+    <div className="flex flex-col pb-16 px-4 py-4 h-full overflow-y-auto">
+      {chat.length > 0 ? (
         <div className="flex flex-col space-y-1 w-full max-w-3xl mx-auto">
           {chat.map(({ message, sender, _id, username }, index) => {
             const isSameSenderAsPrevious =
@@ -39,12 +39,12 @@ function Chats() {
                       ? `bg-blue-500 rounded-se-3xl ${
                           isSameSenderAsPrevious
                             ? "!rounded-e-none"
-                            : "rounded-ee-none"
+                            : "rounded-ee-none mt-2"
                         } rounded-l-3xl`
                       : `bg-gray-700 rounded-es-3xl ${
                           isSameSenderAsNext
                             ? "!rounded-s-none"
-                            : "rounded-ss-none"
+                            : "rounded-ss-none mb-2"
                         } rounded-r-3xl`
                   }`}
                 >
@@ -54,7 +54,11 @@ function Chats() {
             );
           })}
         </div>
+      ) : (
+        <div className="text-gray-500 text-center">No messages yet.</div>
       )}
+      {/* Scroll anchor */}
+      <div ref={messagesEndRef} />
     </div>
   );
 }

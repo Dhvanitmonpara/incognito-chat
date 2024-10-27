@@ -40,19 +40,14 @@ function App() {
 
     const handleLeftRoom = ({
       room,
-      socketId,
       username,
     }: {
-      room: Room;
-      socketId: string;
-      username: string;
+      room: Room | null;
+      socketId?: string;
+      username?: string;
     }) => {
-      if (socketId === socket.id) {
-        setRoom(null);
-      } else {
-        setRoom(room);
-        toast(`${username} has left ${room.roomName}`);
-      }
+      setRoom(room);
+      toast(`${username} has left ${room?.roomName}`);
     };
 
     const handleDisconnect = () => {
