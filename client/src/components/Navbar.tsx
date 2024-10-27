@@ -16,10 +16,7 @@ function Navbar() {
     navigate("/");
   };
   return (
-    <div className="sticky select-none z-50 top-0 left-0 h-20 w-full px-4 sm:px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
-      {/* <h1 className="text-3xl">
-        {socketId ? `Connected with id ${socketId}` : "Not Connected"}
-      </h1> */}
+    <div className="sticky select-none z-50 top-0 left-0 h-16 md:h-20 w-full px-4 sm:px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
       <div className="flex justify-center items-center space-x-4">
         <button onClick={handleBackToHome} className="text-zinc-100 text-2xl hover:bg-zinc-700 rounded-full p-2">
           <IoArrowBack />

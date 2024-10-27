@@ -34,7 +34,7 @@ function SendMessageForm() {
   };
 
   return (
-    <div className="fixed bg-zinc-800 bottom-0 left-0 px-4 pt-6 pb-8 w-full flex flex-col space-y-2 justify-center items-center">
+    <div className="fixed bg-zinc-800 bottom-0 left-0 px-4 py-4 sm:pyt-6 sm:pb-6 md:pt-4 md:pb-8 w-full flex flex-col space-y-2 justify-center items-center">
       <div className="text-sm text-zinc-200">
         {room?.activeUsers.length ? (
           <>
