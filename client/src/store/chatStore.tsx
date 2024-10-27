@@ -20,7 +20,9 @@ const useChatStore = create<ChatState>()(
           })),
         addChat: (chat: Message) =>
           set((state) => ({
-            room: state.room ? { ...state.room, chat: [...state.room.chat, chat] } : null,
+            room: state.room
+              ? { ...state.room, chat: [...state.room.chat, chat] }
+              : null,
           })),
         setRoom: (room: Room | null) => set({ room }),
       }),

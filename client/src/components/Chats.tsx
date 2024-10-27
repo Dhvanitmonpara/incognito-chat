@@ -20,7 +20,7 @@ function Chats() {
           {chat.map(({ message, sender, _id, username }, index) => {
             const isSameSenderAsPrevious =
               index > 0 && chat[index - 1].sender === sender;
-                const isSameSenderAsNext =
+            const isSameSenderAsNext =
               index < chat.length - 1 && chat[index + 1].sender === sender;
 
             return (
@@ -36,7 +36,11 @@ function Chats() {
                 <span
                   className={`py-2 px-4 w-fit text-white rounded-3xl ${
                     socketId === sender
-                      ? `bg-blue-500 rounded-se-3xl ${isSameSenderAsPrevious ? "!rounded-e-none" : "rounded-ee-none"} rounded-l-3xl`
+                      ? `bg-blue-500 rounded-se-3xl ${
+                          isSameSenderAsPrevious
+                            ? "!rounded-e-none"
+                            : "rounded-ee-none"
+                        } rounded-l-3xl`
                       : `bg-gray-700 rounded-es-3xl ${
                           isSameSenderAsNext
                             ? "!rounded-s-none"
@@ -49,8 +53,6 @@ function Chats() {
               </div>
             );
           })}
-          {/* Scroll anchor */}
-          <div ref={messagesEndRef} />
         </div>
       )}
     </div>

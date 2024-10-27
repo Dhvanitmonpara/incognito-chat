@@ -45,6 +45,13 @@ function SendMessageForm() {
               const isLastUser = index === length - 1;
               const isSecondLastUser = index === length - 2;
 
+
+              if(room.activeUsers.length === 1) {
+                return (
+                  <span key={user.id}>{user.username} is active now.</span>
+                );
+              }
+
               // Construct the message for each user
               if (isLastUser) {
                 return (
