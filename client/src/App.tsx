@@ -43,7 +43,6 @@ function App() {
       username,
     }: {
       room: Room | null;
-      socketId?: string;
       username?: string;
     }) => {
       if (room) {
