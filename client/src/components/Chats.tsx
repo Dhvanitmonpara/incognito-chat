@@ -14,7 +14,7 @@ function Chats() {
   }, [chat]);
 
   return (
-    <div className="flex flex-col px-8 py-4 h-full overflow-y-auto">
+    <div className="flex flex-col px-4 py-4 h-full overflow-y-auto">
       {chat.length > 0 && (
         <div className="flex flex-col space-y-1 w-full max-w-3xl mx-auto">
           {chat.map(({ message, sender, _id, username }, index) => {
