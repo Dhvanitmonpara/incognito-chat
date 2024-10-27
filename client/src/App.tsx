@@ -5,11 +5,11 @@ import useChatStore from "./store/chatStore";
 import useSocketStore from "./store/socketStore";
 import toast from "react-hot-toast";
 import { Outlet } from "react-router-dom";
-import { MessageType } from "./types/chatTypes";
+import { Message, Room } from "./types/chatTypes";
 
 function App() {
   const socket = useSocket();
-  const { setChats, addChat, setRoom, chats } = useChatStore();
+  const { setChats, addChat, setRoom, room } = useChatStore();
   const { setSocketId, setUser } = useSocketStore();
 
   useEffect(() => {
@@ -17,40 +17,47 @@ function App() {
       setSocketId(socket.id || "");
     };
 
-    const handleReceiveMessage = (data: MessageType) => {
-      console.log(data)
+    const handleReceiveMessage = (data: Message) => {
       addChat(data);
     };
 
-    const handleJoinedRoom = ({room, username}: {room: string; username: string}) => {
+    const handleJoinedRoom = ({
+      room,
+      username,
+      socketId,
+    }: {
+      room: Room;
+      username: string;
+      socketId: string;
+    }) => {
       setRoom(room);
-      setChats([]);
-      setUser(username)
-      toast(`${username} has joined the room ${room}`);
+      if (socketId === socket.id) {
+        setUser(username);
+      } else {
+        toast(`${username} has joined ${room.roomName}`);
+      }
     };
 
     const handleLeftRoom = ({
       room,
-      sender,
-      username
+      socketId,
+      username,
     }: {
-      room: string;
-      sender: string;
-      username: string
+      room: Room;
+      socketId: string;
+      username: string;
     }) => {
-      if (sender === socket.id) {
-        setChats([]);
-        setRoom("");
-        setUser("")
+      if (socketId === socket.id) {
+        setRoom(null);
       } else {
-        toast(`${username} has left the room ${room}`);
+        setRoom(room);
+        toast(`${username} has left ${room.roomName}`);
       }
     };
 
     const handleDisconnect = () => {
       setSocketId("");
-      setRoom("");
-      setChats([]);
+      setRoom(null);
       toast("You have been disconnected");
     };
 
@@ -77,7 +84,7 @@ function App() {
       socket.off("disconnect", handleDisconnect);
       socket.off("connect_error", handleConnectError);
     };
-  }, [socket, setChats, addChat, chats, setRoom, setSocketId]);
+  }, [socket, setChats, addChat, room, setRoom, setSocketId, setUser]);
 
   return (
     <div className="bg-zinc-800 h-screen overflow-hidden">

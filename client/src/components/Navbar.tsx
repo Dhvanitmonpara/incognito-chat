@@ -11,11 +11,11 @@ function Navbar() {
   const { socketId, user } = useSocketStore();
   const navigate = useNavigate()
   const handleBackToHome = () => {
-    socket.emit('leave-room', {room, sender: socketId, username: user})
+    socket.emit('leave-room', {room: room?.roomName, socketId: socketId, username: user})
     navigate("/");
   };
   return (
-    <div className="sticky z-50 top-0 left-0 h-20 w-full px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
+    <div className="sticky select-none z-50 top-0 left-0 h-20 w-full px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
       {/* <h1 className="text-3xl">
         {socketId ? `Connected with id ${socketId}` : "Not Connected"}
       </h1> */}
@@ -23,7 +23,7 @@ function Navbar() {
         <button onClick={handleBackToHome} className="text-zinc-100 text-2xl hover:bg-zinc-700 rounded-full p-2">
           <IoArrowBack />
         </button>
-        <h3 className="text-zinc-100 text-xl">{room || "No room selected"}</h3>
+        <h3 className="text-zinc-100 text-xl">{room?.roomName || "No room selected"}</h3>
       </div>
       <button className="text-zinc-100 text-2xl hover:bg-zinc-700 rounded-full p-2">
         <MdDownload />

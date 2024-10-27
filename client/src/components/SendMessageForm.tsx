@@ -23,7 +23,7 @@ function SendMessageForm() {
 
     if (socket && room && message.trim()) {
       const messageData: MessageData = {
-        room,
+        room: room.roomName,
         message,
         sender: socket.id,
         username: user,
@@ -34,7 +34,36 @@ function SendMessageForm() {
   };
 
   return (
-    <div className="fixed bg-zinc-800 bottom-0 left-0 px-8 pt-6 pb-8 w-full flex flex-col space-y-5 justify-center items-center">
+    <div className="fixed bg-zinc-800 bottom-0 left-0 px-8 pt-6 pb-8 w-full flex flex-col space-y-2 justify-center items-center">
+      <div className="text-sm text-zinc-200">
+        {room?.activeUsers.length ? (
+          <>
+            {room.activeUsers.map((user, index) => {
+              const length = room.activeUsers.length;
+
+              // Determine if the user is the last or second last
+              const isLastUser = index === length - 1;
+              const isSecondLastUser = index === length - 2;
+
+              // Construct the message for each user
+              if (isLastUser) {
+                return (
+                  <span key={user.id}>{user.username} are active now.</span>
+                );
+              }
+
+              if (isSecondLastUser) {
+                return <span key={user.id}>{user.username} and </span>;
+              }
+
+              return <span key={user.id}>{user.username}, </span>;
+            })}
+          </>
+        ) : (
+          <span>No active users</span>
+        )}
+      </div>
+
       <form
         onSubmit={handleSendMessage}
         className="h-12 w-full max-w-xl bg-zinc-700 flex justify-center rounded-full overflow-hidden px-1 items-center"

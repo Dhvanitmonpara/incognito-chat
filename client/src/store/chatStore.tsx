@@ -1,29 +1,28 @@
 import { create } from "zustand";
-
 import { devtools, persist } from "zustand/middleware";
-import { MessageType } from "../types/chatTypes";
+import { Message, Room } from "../types/chatTypes";
 
 interface ChatState {
-    chats: MessageType[] | []
-    setChats: (chats: MessageType[]) => void
-    addChat: (chat: MessageType) => void
-    room: string
-    setRoom: (room: string) => void
+  room: Room | null;
+  setChats: (chats: Message[]) => void;
+  addChat: (chat: Message) => void;
+  setRoom: (room: Room | null) => void;
 }
 
 const useChatStore = create<ChatState>()(
   devtools(
     persist(
       (set) => ({
-        chats: [],
-        room: "",
-        setChats: (chats: MessageType[]) => set({ chats }),
-        addChat(chat: MessageType) {
+        room: { roomName: "", chat: [], activeUsers: [] },
+        setChats: (chats: Message[]) =>
           set((state) => ({
-            chats: [...state.chats, chat],
-          }));
-        },
-        setRoom: (room: string) => set({ room }),
+            room: state.room ? { ...state.room, chat: chats } : null,
+          })),
+        addChat: (chat: Message) =>
+          set((state) => ({
+            room: state.room ? { ...state.room, chat: [...state.room.chat, chat] } : null,
+          })),
+        setRoom: (room: Room | null) => set({ room }),
       }),
       {
         name: "chats",

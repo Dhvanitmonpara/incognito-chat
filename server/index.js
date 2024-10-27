@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import cors from "cors";
+import { v4 as uuidv4 } from "uuid";
 
 const result = dotenv.config({ path: "./.env" });
 if (result.error) {
@@ -27,36 +28,68 @@ app.use(
     })
 );
 
-io.on("connection", (socket) => {
+const rooms = {};
 
+io.on("connection", (socket) => {
+    // Handle message event
     socket.on("message", ({ room, message, sender, username }) => {
         const messageData = {
-            _id: Date.now().toString(),
+            _id: uuidv4(),
             message,
             sender,
-            username
+            username,
         };
 
-        if (room) {
+        if (room && rooms[room]) {
+            rooms[room].chat.push(messageData);
             io.to(room).emit("receive-message", messageData);
         } else {
-            console.error("⚠️  Room not specified for message:", messageData);
+            console.error("⚠️  Room not specified or does not exist for message:", messageData);
         }
     });
 
-    socket.on("join-room", ({room, username}) => {
+    // Handle join-room event
+    socket.on("join-room", ({ room, username, socketId }) => {
         socket.join(room);
-        io.to(room).emit("joined-room", {room, username});
+        rooms[room] = rooms[room] || { roomName: room, chat: [], activeUsers: [] };
+
+        // Add user to active users in the room
+        rooms[room].activeUsers.push({ id: socketId, username });
+
+        // Emit the updated room data to clients
+        io.to(room).emit("joined-room", { room: rooms[room], username, socketId });
     });
 
-    socket.on("leave-room", ({ room, sender, username }) => {
+    // Handle leave-room event
+    socket.on("leave-room", ({ room, socketId, username }) => {
         socket.leave(room);
-        io.to(room).emit("left-room", {room, sender, username} );
-        io.to(sender).emit("left-room", {room, sender, username});
+
+        if (rooms[room]) {
+            rooms[room].activeUsers = rooms[room].activeUsers.filter(user => user.id !== socketId);
+
+            // Emit the updated room data to clients
+            io.to(room).emit("left-room", { room: rooms[room], username });
+
+            // Remove room if empty
+            if (rooms[room].activeUsers.length === 0) {
+                delete rooms[room];
+            }
+        }
     });
 
+    // Handle disconnect event
     socket.on("disconnect", () => {
-        console.log("A user has disconnected:", socket.id);
+        for (const roomId in rooms) {
+            rooms[roomId].activeUsers = rooms[roomId].activeUsers.filter(user => user.id !== socket.id);
+
+            // Emit the updated list of active users
+            io.to(roomId).emit("room-users", rooms[roomId]);
+
+            // Clean up room if empty
+            if (rooms[roomId].activeUsers.length === 0) {
+                delete rooms[roomId];
+            }
+        }
     });
 });
 

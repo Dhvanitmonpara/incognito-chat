@@ -4,7 +4,7 @@ import SendMessageForm from "../components/SendMessageForm";
 
 function ChatPage() {
   return (
-    <div className="w-screen h-screen flex flex-col">
+    <div className="w-screen h-[100dvh] flex flex-col">
       <Navbar />
       {/* Adjust container to allow Chats to scroll */}
       <div className="flex-1 pb-24 overflow-y-auto">

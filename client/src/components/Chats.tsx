@@ -3,7 +3,7 @@ import useChatStore from "../store/chatStore";
 import useSocketStore from "../store/socketStore";
 
 function Chats() {
-  const { chats } = useChatStore();
+  const { chat } = useChatStore().room || { chat: [] };
   const { socketId } = useSocketStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -11,17 +11,17 @@ function Chats() {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [chats]);
+  }, [chat]);
 
   return (
     <div className="flex flex-col px-8 py-4 h-full overflow-y-auto">
-      {chats.length > 0 && (
+      {chat.length > 0 && (
         <div className="flex flex-col space-y-1 w-full max-w-3xl mx-auto">
-          {chats.map(({ message, sender, _id, username }, index) => {
+          {chat.map(({ message, sender, _id, username }, index) => {
             const isSameSenderAsPrevious =
-              index > 0 && chats[index - 1].sender === sender;
+              index > 0 && chat[index - 1].sender === sender;
                 const isSameSenderAsNext =
-              index < chats.length - 1 && chats[index + 1].sender === sender;
+              index < chat.length - 1 && chat[index + 1].sender === sender;
 
             return (
               <div
