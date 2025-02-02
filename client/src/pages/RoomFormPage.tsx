@@ -41,9 +41,9 @@ function RoomFormPage() {
     }
   };
 
-  const checkServerHealth = () => {
+  const checkServerHealth = async () => {
     try {
-      const res = fetch(`${import.meta.env.VITE_SERVER_URL}/healthz`);
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/healthz`);
 
       console.log(res)
 
@@ -60,7 +60,7 @@ function RoomFormPage() {
   }
 
   useEffect(() => {
-    if(import.meta.env.VITE_ENVIRONMENT === "production") {
+    if (import.meta.env.VITE_ENVIRONMENT === "production") {
       checkServerHealth()
     } else {
       setServerStatus("Active")
