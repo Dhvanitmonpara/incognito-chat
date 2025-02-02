@@ -45,6 +45,8 @@ function RoomFormPage() {
     try {
       const res = fetch(`${import.meta.env.VITE_SERVER_URL}/healthz`);
 
+      console.log(res)
+
       if (!res) {
         throw new Error("Server is not active");
       }
