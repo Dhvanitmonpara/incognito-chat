@@ -16,16 +16,16 @@ function Navbar() {
     navigate("/");
   };
   return (
-    <div className="sticky select-none z-50 top-0 left-0 h-16 md:h-20 w-full px-4 sm:px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-700">
+    <div className="sticky select-none z-50 top-0 left-0 h-16 md:h-20 w-full px-4 sm:px-8 lg:px-24 flex justify-between space-x-4 overflow-hidden items-center border-b-[0.2px] border-zinc-800">
       <div className="flex justify-center items-center space-x-4">
-        <button onClick={handleBackToHome} className="text-zinc-100 text-2xl hover:bg-zinc-700 rounded-full p-2">
+        <button onClick={handleBackToHome} className="text-zinc-100 text-2xl hover:bg-zinc-800 rounded-full p-2">
           <IoArrowBack />
         </button>
         <h3 className="text-zinc-100 text-xl">{room?.roomName || "No room selected"}</h3>
       </div>
       <button onClick={() => {
         toast("This function is not ready yet")
-      }} className="text-zinc-100 text-2xl hover:bg-zinc-700 rounded-full p-2">
+      }} className="text-zinc-100 text-2xl hover:bg-zinc-800 rounded-full p-2">
         <MdDownload />
       </button>
     </div>

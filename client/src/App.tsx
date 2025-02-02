@@ -83,7 +83,7 @@ function App() {
   }, [socket, setChats, addChat, room, setRoom, setSocketId, setUser]);
 
   return (
-    <div className="bg-zinc-800 h-screen overflow-hidden">
+    <div className="bg-zinc-900 h-screen overflow-hidden">
       <Outlet />
     </div>
   );

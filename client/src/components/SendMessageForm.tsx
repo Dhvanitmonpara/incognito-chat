@@ -34,7 +34,7 @@ function SendMessageForm() {
   };
 
   return (
-    <div className="fixed bg-zinc-800 bottom-0 left-0 px-4 py-4 sm:pyt-6 sm:pb-6 md:pt-4 md:pb-8 w-full flex flex-col space-y-2 justify-center items-center">
+    <div className="fixed bg-zinc-900 bottom-0 left-0 px-4 py-4 sm:pyt-6 sm:pb-6 md:pt-4 md:pb-8 w-full flex flex-col space-y-2 justify-center items-center">
       <div className="text-sm text-zinc-200">
         {room?.activeUsers.length ? (
           <>
@@ -73,14 +73,14 @@ function SendMessageForm() {
 
       <form
         onSubmit={handleSendMessage}
-        className="h-12 w-full max-w-xl bg-zinc-700 flex justify-center rounded-full overflow-hidden px-1 items-center"
+        className="h-12 w-full max-w-xl bg-zinc-800 flex justify-center rounded-full overflow-hidden px-1 items-center"
       >
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Send something"
-          className="p-2 pl-6 bg-zinc-700 w-full text-zinc-100 outline-none"
+          className="p-2 pl-6 bg-zinc-800 w-full text-zinc-100 outline-none"
         />
         <button
           type="submit"

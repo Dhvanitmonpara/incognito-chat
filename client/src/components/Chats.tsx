@@ -36,12 +36,12 @@ function Chats() {
                 <span
                   className={`py-2 px-4 w-fit text-white rounded-3xl ${
                     socketId === sender
-                      ? `bg-blue-500 rounded-se-3xl ${
+                      ? `bg-blue-600 rounded-se-3xl ${
                           isSameSenderAsPrevious
                             ? "!rounded-e-none"
                             : "rounded-ee-none mt-2"
                         } rounded-l-3xl`
-                      : `bg-gray-700 rounded-es-3xl ${
+                      : `bg-gray-700/60 rounded-es-3xl ${
                           isSameSenderAsNext
                             ? "!rounded-s-none"
                             : "rounded-ss-none mb-2"

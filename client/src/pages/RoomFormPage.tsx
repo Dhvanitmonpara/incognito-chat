@@ -4,6 +4,8 @@ import useChatStore from "./../store/chatStore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useSocket from "./../socket/useSocket";
+import { FaCircleCheck } from "react-icons/fa6";
+import { LuLoader2 } from "react-icons/lu";
 
 function RoomFormPage() {
   const { room } = useChatStore();
@@ -44,8 +46,6 @@ function RoomFormPage() {
   const checkServerHealth = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/healthz`);
-
-      console.log(res)
 
       if (!res.ok) {
         throw new Error("Server is not active");
@@ -93,15 +93,32 @@ function RoomFormPage() {
           className="py-3 px-6 bg-zinc-800 w-full border-2 rounded-full border-zinc-700 focus:border-zinc-600 text-zinc-100 outline-none"
         />
         <button
-          disabled={!roomName.trim() || !username.trim()}
+          disabled={!roomName.trim() || !username.trim() || (serverStatus !== "Active")}
           type="submit"
           className={`py-3 px-6 w-full select-none font-semibold rounded-full bg-zinc-100 hover:bg-zinc-300 text-zinc-900 transition-all disabled:bg-zinc-400`}
         >
           Join
         </button>
       </form>
-      <div>
-        <p className="text-zinc-300">{serverStatus === "Unknown" ? "Fetching server status" : `Server health status is ${serverStatus}`}</p>
+      <div className="text-zinc-300 space-x-1.5">
+        {serverStatus === "Unknown" && <>
+          <LuLoader2 className="inline-block animate-spin" />
+          <span>
+            Fetching server status
+          </span>
+        </>}
+        {serverStatus === "Active" ?
+          <>
+            <FaCircleCheck className="inline-block text-green-500" />
+            <span>
+              Server is Active
+            </span>
+          </>
+          :
+          <span className="text-red-500">
+            Server is inactive, It'll be active in a few seconds
+          </span>
+        }
       </div>
     </div>
   );
