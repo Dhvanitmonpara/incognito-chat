@@ -51,6 +51,14 @@ function App() {
       setRoom(room);
     };
 
+    const handleLeaveRoom = ({
+      room,
+    }: {
+      room: Room | null;
+    }) => {
+      setRoom(room);
+    };
+
     const handleDisconnect = () => {
       setSocketId("");
       setRoom(null);
@@ -69,6 +77,7 @@ function App() {
     socket.on("receive-message", handleReceiveMessage);
     socket.on("joined-room", handleJoinedRoom);
     socket.on("left-room", handleLeftRoom);
+    socket.on("room-users", handleLeaveRoom);
     socket.on("disconnect", handleDisconnect);
     socket.on("connect_error", handleConnectError);
 
@@ -77,6 +86,7 @@ function App() {
       socket.off("receive-message", handleReceiveMessage);
       socket.off("joined-room", handleJoinedRoom);
       socket.off("left-room", handleLeftRoom);
+      socket.on("room-users", handleLeaveRoom);
       socket.off("disconnect", handleDisconnect);
       socket.off("connect_error", handleConnectError);
     };

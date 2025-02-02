@@ -81,10 +81,11 @@ io.on("connection", (socket) => {
     // Handle disconnect event
     socket.on("disconnect", () => {
         for (const roomId in rooms) {
+
             rooms[roomId].activeUsers = rooms[roomId].activeUsers.filter(user => user.id !== socket.id);
 
             // Emit the updated list of active users
-            io.to(roomId).emit("room-users", rooms[roomId]);
+            io.to(roomId).emit("room-users", { room: rooms[roomId] });
 
             // Clean up room if empty
             if (rooms[roomId].activeUsers.length === 0) {
