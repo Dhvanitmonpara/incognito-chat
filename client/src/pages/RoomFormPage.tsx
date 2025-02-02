@@ -47,9 +47,11 @@ function RoomFormPage() {
 
       console.log(res)
 
-      if (!res) {
+      if (!res.ok) {
         throw new Error("Server is not active");
       }
+
+      setServerStatus("Active")
 
     } catch (error) {
       if (error instanceof Error) {
